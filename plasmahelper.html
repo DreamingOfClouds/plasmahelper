@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Filter</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        th, td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filter Ghosts by Evidence</h1>
+
+    <div>
+        <!-- Create checkboxes for each criterion -->
+        <label><input type="checkbox" id="EMF" onchange="filterGhosts()"> EMF</label>
+        <label><input type="checkbox" id="UltraViolet" onchange="filterGhosts()"> Ultra Violet</label>
+        <label><input type="checkbox" id="GhostWriting" onchange="filterGhosts()"> Ghost Writing</label>
+        <label><input type="checkbox" id="FreezingTemperatures" onchange="filterGhosts()"> Freezing Temperatures</label>
+        <label><input type="checkbox" id="DOTS" onchange="filterGhosts()"> DOTS</label>
+        <label><input type="checkbox" id="GhostOrbs" onchange="filterGhosts()"> Ghost Orbs</label>
+        <label><input type="checkbox" id="SpiritBox" onchange="filterGhosts()"> Spirit Box</label>
+        <label><input type="checkbox" id="Normal" onchange="filterGhosts()"> Normal</label>
+        <label><input type="checkbox" id="Slow" onchange="filterGhosts()"> Slow</label>
+        <label><input type="checkbox" id="Fast" onchange="filterGhosts()"> Fast</label>
+        <label><input type="checkbox" id="TurnsLightsOff" onchange="filterGhosts()"> Turns Lights Off</label>
+        <label><input type="checkbox" id="TurnsLightsOn" onchange="filterGhosts()"> Turns Lights On</label>
+        <label><input type="checkbox" id="FloatsObjects" onchange="filterGhosts()"> Floats Objects</label>
+        <label><input type="checkbox" id="ThrowsObjects" onchange="filterGhosts()"> Throws Objects</label>
+        <label><input type="checkbox" id="ShovesPeople" onchange="filterGhosts()"> Shoves People</label>
+        <label><input type="checkbox" id="TurnsOffBreaker" onchange="filterGhosts()"> Turns Off Breaker</label>
+    </div>
+
+    <br>
+
+    <!-- Table for displaying ghosts -->
+    <table id="ghostTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>EMF</th>
+                <th>Ultra Violet</th>
+                <th>Ghost Writing</th>
+                <th>Freezing Temperatures</th>
+                <th>DOTS</th>
+                <th>Ghost Orbs</th>
+                <th>Spirit Box</th>
+                <th>Normal</th>
+                <th>Slow</th>
+                <th>Fast</th>
+                <th>Turns Lights Off</th>
+                <th>Turns Lights On</th>
+                <th>Floats Objects</th>
+                <th>Throws Objects</th>
+                <th>Shoves People</th>
+                <th>Turns Off Breaker</th>
+            </tr>
+        </thead>
+        <tbody id="ghostBody">
+            <!-- Dynamically filled with ghost data -->
+        </tbody>
+    </table>
+
+
+    <script>
+        const ghostData = [
+        {
+    Name: "Goryo",
+    EMF: 1,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 1,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Demon",
+    EMF: 0,
+    UltraViolet: 1,
+    GhostWriting: 1,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 1,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Poltergeist",
+    EMF: 0,
+    UltraViolet: 1,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Oni",
+    EMF: 1,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 1
+  },
+  {
+    Name: "Shade",
+    EMF: 1,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Twins",
+    EMF: 1,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Wraith",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 1,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Banshee",
+    EMF: 1,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 1,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Jinn",
+    EMF: 1,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 1,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Myling",
+    EMF: 1,
+    UltraViolet: 1,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 1,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Obake",
+    EMF: 1,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 0,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 1
+  },
+  {
+    Name: "Hantu",
+    EMF: 0,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 1,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Mimic",
+    EMF: 0,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 1,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Phantom",
+    EMF: 0,
+    UltraViolet: 1,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 1
+  },
+  {
+    Name: "Raiju",
+    EMF: 1,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 1,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Spirit",
+    EMF: 1,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Deogen",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 1,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Mare",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 0,
+    GhostOrbs: 1,
+    SpiritBox: 1,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 1,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Moroi",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 1
+  },
+  {
+    Name: "Onryo",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 1,
+    SpiritBox: 1,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 1
+  },
+  {
+    Name: "Revenant",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 1,
+    DOTS: 0,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Thaye",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 0,
+    Fast: 1,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 0,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Yokai",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 1,
+    FreezingTemperatures: 0,
+    DOTS: 1,
+    GhostOrbs: 0,
+    SpiritBox: 1,
+    Normal: 1,
+    Slow: 0,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 1,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  },
+  {
+    Name: "Yurei",
+    EMF: 0,
+    UltraViolet: 0,
+    GhostWriting: 0,
+    FreezingTemperatures: 1,
+    DOTS: 1,
+    GhostOrbs: 1,
+    SpiritBox: 0,
+    Normal: 0,
+    Slow: 1,
+    Fast: 0,
+    TurnsLightsOff: 0,
+    TurnsLightsOn: 0,
+    FloatsObjects: 0,
+    ThrowsObjects: 0,
+    ShovesPeople: 1,
+    TurnsOffBreaker: 0
+  }
+];
+
+        // Populate the ghost table
+        const tableBody = document.getElementById("ghostBody");
+
+        function loadTable(data) {
+            tableBody.innerHTML = ''; // Clear previous rows
+            data.forEach(ghost => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ghost.Name}</td>
+                    <td>${ghost.EMF}</td>
+                    <td>${ghost.UltraViolet}</td>
+                    <td>${ghost.GhostWriting}</td>
+                    <td>${ghost.FreezingTemperatures}</td>
+                    <td>${ghost.DOTS}</td>
+                    <td>${ghost.GhostOrbs}</td>
+                    <td>${ghost.SpiritBox}</td>
+                    <td>${ghost.Normal}</td>
+                    <td>${ghost.Slow}</td>
+                    <td>${ghost.Fast}</td>
+                    <td>${ghost.TurnsLightsOff}</td>
+                    <td>${ghost.TurnsLightsOn}</td>
+                    <td>${ghost.FloatsObjects}</td>
+                    <td>${ghost.ThrowsObjects}</td>
+                    <td>${ghost.ShovesPeople}</td>
+                    <td>${ghost.TurnsOffBreaker}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterGhosts() {
+            const filters = {
+                EMF: document.getElementById('EMF').checked,
+                UltraViolet: document.getElementById('UltraViolet').checked,
+                GhostWriting: document.getElementById('GhostWriting').checked,
+                FreezingTemperatures: document.getElementById('FreezingTemperatures').checked,
+                DOTS: document.getElementById('DOTS').checked,
+                GhostOrbs: document.getElementById('GhostOrbs').checked,
+                SpiritBox: document.getElementById('SpiritBox').checked,
+                Normal: document.getElementById('Normal').checked,
+                Slow: document.getElementById('Slow').checked,
+                Fast: document.getElementById('Fast').checked,
+                TurnsLightsOff: document.getElementById('TurnsLightsOff').checked,
+                TurnsLightsOn: document.getElementById('TurnsLightsOn').checked,
+                FloatsObjects: document.getElementById('FloatsObjects').checked,
+                ThrowsObjects: document.getElementById('ThrowsObjects').checked,
+                ShovesPeople: document.getElementById('ShovesPeople').checked,
+                TurnsOffBreaker: document.getElementById('TurnsOffBreaker').checked
+            };
+
+            const filteredData = ghostData.filter(ghost => {
+                return Object.keys(filters).every(key => {
+                    return !filters[key] || ghost[key] === 1;
+                });
+            });
+
+            loadTable(filteredData);
+        }
+
+        // Load the initial data
+        loadTable(ghostData);
+
+        </script>
+        </body>
+        </html>

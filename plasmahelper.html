@@ -9,27 +9,30 @@
             border: 1px solid black;
             border-collapse: collapse;
             padding: 8px;
-        }
-        th, td {
-            text-align: center;
+          text-align: center;
         }
     </style>
 </head>
 <body>
     <h1>Filter Ghosts by Evidence</h1>
-
-    <div>
+    
+    <button onclick="reset_toggles()"> Reset </button> 
+    <label><input type="checkbox" id="Easy" onchange="toggleMode()"> Easy Mode</label>
+    <div id="Regular-Toggles">
         <!-- Create checkboxes for each criterion -->
+         Traits:
         <label><input type="checkbox" id="EMF" onchange="filterGhosts()"> EMF</label>
-        <label><input type="checkbox" id="UltraViolet" onchange="filterGhosts()"> Ultra Violet</label>
-        <label><input type="checkbox" id="GhostWriting" onchange="filterGhosts()"> Ghost Writing</label>
-        <label><input type="checkbox" id="FreezingTemperatures" onchange="filterGhosts()"> Freezing Temperatures</label>
+        <label><input type="checkbox" id="UltraViolet" onchange="filterGhosts()"> UV</label>
+        <label><input type="checkbox" id="GhostWriting" onchange="filterGhosts()"> Writing</label>
+        <label><input type="checkbox" id="FreezingTemperatures" onchange="filterGhosts()"> Freezing</label>
         <label><input type="checkbox" id="DOTS" onchange="filterGhosts()"> DOTS</label>
-        <label><input type="checkbox" id="GhostOrbs" onchange="filterGhosts()"> Ghost Orbs</label>
-        <label><input type="checkbox" id="SpiritBox" onchange="filterGhosts()"> Spirit Box</label>
-        <label><input type="checkbox" id="Normal" onchange="filterGhosts()"> Normal</label>
+        <label><input type="checkbox" id="GhostOrbs" onchange="filterGhosts()"> Gorbs</label>
+        <label><input type="checkbox" id="SpiritBox" onchange="filterGhosts()"> Spirit Box</label>      
+        <br>  Speed:
         <label><input type="checkbox" id="Slow" onchange="filterGhosts()"> Slow</label>
+        <label><input type="checkbox" id="Normal" onchange="filterGhosts()"> Normal</label>
         <label><input type="checkbox" id="Fast" onchange="filterGhosts()"> Fast</label>
+        <br>  Behaviors:
         <label><input type="checkbox" id="TurnsLightsOff" onchange="filterGhosts()"> Turns Lights Off</label>
         <label><input type="checkbox" id="TurnsLightsOn" onchange="filterGhosts()"> Turns Lights On</label>
         <label><input type="checkbox" id="FloatsObjects" onchange="filterGhosts()"> Floats Objects</label>
@@ -37,6 +40,16 @@
         <label><input type="checkbox" id="ShovesPeople" onchange="filterGhosts()"> Shoves People</label>
         <label><input type="checkbox" id="TurnsOffBreaker" onchange="filterGhosts()"> Turns Off Breaker</label>
     </div>
+    <div id="Easy-Toggles">
+      <br> Negative Toggles: 
+=      <label><input type="checkbox" id="EMF-Easy" onchange="filterGhosts()"> EMF</label>
+      <label><input type="checkbox" id="UltraViolet-Easy" onchange="filterGhosts()"> UV</label>
+      <label><input type="checkbox" id="GhostWriting-Easy" onchange="filterGhosts()"> Writing</label>
+      <label><input type="checkbox" id="FreezingTemperatures-Easy" onchange="filterGhosts()"> Freezing</label>
+      <label><input type="checkbox" id="DOTS-Easy" onchange="filterGhosts()"> DOTS</label>
+      <label><input type="checkbox" id="GhostOrbs-Easy" onchange="filterGhosts()"> Gorbs</label>
+      <label><input type="checkbox" id="SpiritBox-Easy" onchange="filterGhosts()"> Spirit Box</label>      
+  </div>
 
     <br>
 
@@ -558,8 +571,40 @@
                 tableBody.appendChild(row);
             });
         }
+        function reset_toggles (){
 
+          var checkboxes = document.querySelectorAll('div#Regular-Toggles input[type="checkbox"]');
+          var checkboxes2 = document.querySelectorAll('div#Easy-Toggles input[type="checkbox"]');
+          checkboxes.forEach(function(checkbox) {
+            checkbox.checked = false;
+          });
+          checkboxes2.forEach(function(checkbox) {
+            checkbox.checked = false;
+          });
+          filterGhosts()
+
+        }
+        function toggleMode() {
+          if (document.getElementById('Easy').checked) {
+            document.getElementById("Easy-Toggles").style.display = "block";             
+          }
+          else {
+            document.getElementById("Easy-Toggles").style.display = "none";
+          }
+
+
+        }
         function filterGhosts() {
+          const negativeFilters = {
+              EMF: document.getElementById('EMF-Easy').checked,
+              UltraViolet: document.getElementById('UltraViolet-Easy').checked,
+              GhostWriting: document.getElementById('GhostWriting-Easy').checked,
+              FreezingTemperatures: document.getElementById('FreezingTemperatures-Easy').checked,
+              DOTS: document.getElementById('DOTS-Easy').checked,
+              GhostOrbs: document.getElementById('GhostOrbs-Easy').checked,
+              SpiritBox: document.getElementById('SpiritBox-Easy').checked
+          };
+
             const filters = {
                 EMF: document.getElementById('EMF').checked,
                 UltraViolet: document.getElementById('UltraViolet').checked,
@@ -580,17 +625,24 @@
             };
 
             const filteredData = ghostData.filter(ghost => {
-                return Object.keys(filters).every(key => {
-                    return !filters[key] || ghost[key] === 1;
-                });
+            const positiveMatch = Object.keys(filters).every(key => {
+                return !filters[key] || ghost[key] === 1;
             });
+
+            const negativeMatch = Object.keys(negativeFilters).every(key => {
+                return !negativeFilters[key] || ghost[key] === 0;
+            });
+
+            return positiveMatch && negativeMatch;
+        });
+
 
             loadTable(filteredData);
         }
 
         // Load the initial data
+        toggleMode()
         loadTable(ghostData);
-
         </script>
         </body>
         </html>

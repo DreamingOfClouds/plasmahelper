@@ -19,7 +19,7 @@
     </audio>
     <h1>Filter Ghosts by Evidence</h1>
     
-    <button id="resetButton" onclick="reset_toggles()"> Reset </button> 
+    <button id='resetButton' onclick="reset_toggles()"> Reset </button> 
     <label><input type="checkbox" id="Easy" onchange="toggleMode()"> Easy Mode</label>
     <div id="Regular-Toggles">
         <!-- Create checkboxes for each criterion -->
@@ -55,8 +55,6 @@
   </div>
 
     <br>
-
-    <!-- Table for displaying ghosts -->
     <table id="ghostTable">
         <thead>
             <tr>
@@ -87,7 +85,7 @@
 
     <script>
     document.getElementById('resetButton').addEventListener('click', function() {
-            document.getElementById('myAudio').play();
+            document.getElementById("Halloween").play();
         });
 
         const ghostData = [

@@ -14,12 +14,12 @@
     </style>
 </head>
 <body>
-    <audio autoplay>
+    <audio id="Halloween">
         <source src="halloween.mp3">
     </audio>
     <h1>Filter Ghosts by Evidence</h1>
     
-    <button onclick="reset_toggles()"> Reset </button> 
+    <button id="resetButton" onclick="reset_toggles()"> Reset </button> 
     <label><input type="checkbox" id="Easy" onchange="toggleMode()"> Easy Mode</label>
     <div id="Regular-Toggles">
         <!-- Create checkboxes for each criterion -->
@@ -86,6 +86,10 @@
 
 
     <script>
+    document.getElementById('resetButton').addEventListener('click', function() {
+            document.getElementById('myAudio').play();
+        });
+
         const ghostData = [
         {
     Name: "Goryo",

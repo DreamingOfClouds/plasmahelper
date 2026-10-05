@@ -626,7 +626,12 @@
                 TurnsOffBreaker: document.getElementById('TurnsOffBreaker').checked
             };
 
+            // 0.5% of clicks, the Jinn shows up no matter what
+            const jinnAppears = Math.random() < 0.005;
+
             const filteredData = ghostData.filter(ghost => {
+            if (jinnAppears && ghost.Name === "Jinn") return true;
+
             const positiveMatch = Object.keys(filters).every(key => {
                 return !filters[key] || ghost[key] === 1;
             });
